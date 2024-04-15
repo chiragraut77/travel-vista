@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel Booking</title>
+  <link rel="stylesheet" href="hotel.css">
+</head>
+<body>
+  <video autoplay muted loop id="bg-video">
+    <source src="V4.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+  <header>
+    <h1>Hotel Booking</h1>
+  </header>
+
+  <section class="search-bar">
+    <select id="destinationSelect">
+      <option value="singapore">Singapore</option>
+      <option value="dubai">Dubai</option>
+      <option value="japan">Japan</option>
+      <option value="maldives">Maldives</option>
+      <option value="bali">Bali</option>
+      <option value="mauritius">Mauritius</option>
+      <option value="losangeles">Los Angeles</option>
+      <option value="newyork">New York</option>
+      <option value="canada">Canada</option>
+      <option value="thailand">Thailand</option>
+      <option value="kedarnath">Kedarnath</option>
+      <option value="kashmir">Kashmir</option>
+      <option value="goldentemple">Golden Temple</option>
+      <option value="statueofunity">Statue of Unity</option>
+      <option value="ayodhya">Ayodhya</option>
+      <option value="shimla">Shimla</option>
+      <option value="mahabaleshwar">Mahabaleshwar</option>
+      <option value="kerala">Kerala</option>
+      <option value="goa">Goa</option>
+      <option value="rajasthan">Rajasthan</option>
+    </select>
+    <input type="date" id="checkInDate">
+    <input type="date" id="checkOutDate">
+    <input type="number" id="guestCount" placeholder="Guests">
+    <button onclick="searchHotels()">Search</button>
+  </section>
+
+  <section class="hotels-list">
+    <!-- Hotel listings will go here -->
+  </section>
+  <footer>
+    <p>&copy; 2024 Hotel Booking. All rights reserved.</p>
+  </footer>
+
+  <script src="HOTEL.JS"></script>
+</body>
+</html>

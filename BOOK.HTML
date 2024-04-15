@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Page</title>
+    <link rel="stylesheet" href="book.css">
+</head>
+<body>
+    <h1>Booking Page</h1>
+    <form id="bookingForm" onsubmit="return validateForm()">
+        <label for="phoneNumber">Phone Number:</label><br>
+        <input type="text" id="phoneNumber" name="phoneNumber" required><br><br>
+
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <label for="destination">Select Destination:</label><br>
+        <select id="destination" name="destination">
+            <option value="international">International</option>
+            <option value="indian">Indian</option>
+        </select><br><br>
+
+        <div id="packageOptions">
+            <!-- Package options will be dynamically populated here based on user selection -->
+        </div>
+
+        <label for="numberOfMembers">Number of Members:</label><br>
+        <input type="number" id="numberOfMembers" name="numberOfMembers" min="1" value="1"><br><br>
+
+        <label for="paymentMethod">Select Payment Method:</label><br>
+        <select id="paymentMethod" name="paymentMethod" onchange="showPaymentFields()">
+            <option value="creditCard">Credit Card</option>
+            <option value="debitCard">Debit Card</option>
+            <option value="upi">UPI</option>
+        </select><br><br>
+
+        <div id="creditCardFields" style="display: none;">
+            <label for="creditCardNumber">Credit Card Number:</label><br>
+            <input type="text" id="creditCardNumber" name="creditCardNumber"><br><br>
+            <label for="expiryDate">Expiry Date:</label><br>
+            <input type="text" id="expiryDate" name="expiryDate"><br><br>
+            <label for="cvv">CVV:</label><br>
+            <input type="text" id="cvv" name="cvv"><br><br>
+        </div>
+
+        <div id="debitCardFields" style="display: none;">
+            <label for="debitCardNumber">Debit Card Number:</label><br>
+            <input type="text" id="debitCardNumber" name="debitCardNumber"><br><br>
+            <label for="expiryDate">Expiry Date:</label><br>
+            <input type="text" id="expiryDate" name="expiryDate"><br><br>
+            <label for="cvv">CVV:</label><br>
+            <input type="text" id="cvv" name="cvv"><br><br>
+        </div>
+
+        <div id="upiFields" style="display: none;">
+            <label for="upiId">UPI ID:</label><br>
+            <input type="text" id="upiId" name="upiId"><br><br>
+            <!-- Section for displaying QR code -->
+            <div id="qrCodeSection" style="display: none;">
+                <label for="qrCode">UPI QR Code:</label><br>
+                <img id="qrCode" src="path/to/your/qr_code_image.jpg" alt="UPI QR Code" width="150"><br><br>
+            </div>
+        </div>
+
+        <label for="paymentProof">Upload Payment Proof:</label><br>
+        <input type="file" id="paymentProof" name="paymentProof"><br><br>
+
+        <button type="submit">Book</button> <!-- Changed button type to "submit" and label to "Book" -->
+    </form>
+
+    <script>
+        function validateForm() {
+            var phoneNumber = document.getElementById("phoneNumber").value;
+            var password = document.getElementById("password").value;
+
+            // Perform validation here if needed
+
+            return true; // Returning true for now to allow form submission
+        }
+
+        function showPaymentFields() {
+            var paymentMethod = document.getElementById("paymentMethod").value;
+            var creditCardFields = document.getElementById("creditCardFields");
+            var debitCardFields = document.getElementById("debitCardFields");
+            var upiFields = document.getElementById("upiFields");
+            var qrCodeSection = document.getElementById("qrCodeSection");
+
+            // Hide all payment fields and QR code section
+            creditCardFields.style.display = "none";
+            debitCardFields.style.display = "none";
+            upiFields.style.display = "none";
+            qrCodeSection.style.display = "none";
+
+            // Show fields based on selected payment method
+            if (paymentMethod === "creditCard") {
+                creditCardFields.style.display = "block";
+            } else if (paymentMethod === "debitCard") {
+                debitCardFields.style.display = "block";
+            } else if (paymentMethod === "upi") {
+                upiFields.style.display = "block";
+                qrCodeSection.style.display = "block"; // Display QR code section for UPI payment
+            }
+        }
+
+        document.getElementById("destination").addEventListener("change", function() {
+            populatePackageOptions();
+        });
+
+        function populatePackageOptions() {
+            var destination = document.getElementById("destination").value;
+            var packageOptionsDiv = document.getElementById("packageOptions");
+
+            // Clear previous options
+            packageOptionsDiv.innerHTML = "";
+
+            // Add package options based on selected destination
+            var packagePrices = {};
+            if (destination === "international") {
+                packagePrices = {
+                    "Singapore": 18000,
+                    "Dubai": 15000,
+                    "Japan": 22000,
+                    "Maldives": 25000,
+                    "Bali": 20000,
+                    "Mauritius": 23000,
+                    "Los Angeles": 28000,
+                    "New York": 26000,
+                    "Canada": 27000,
+                    "Thailand": 19000
+                };
+            } else if (destination === "indian") {
+                packagePrices = {
+                    "Kedarnath": 18000,
+                    "Kashmir": 25000,
+                    "Punjab": 21000,
+                    "Gujarat": 15000,
+                    "Ayodhya": 18000,
+                    "Shimla": 15000,
+                    "Mahabaleshwar": 7000,
+                    "Kerala": 22000,
+                    "Goa": 24000,
+                    "Rajasthan": 15000
+                };
+            }
+
+            var select = document.createElement("select");
+            select.name = "package";
+            select.id = "package";
+
+            for (var packageName in packagePrices) {
+                var option = document.createElement("option");
+                option.value = packageName;
+                option.text = packageName + " - $" + packagePrices[packageName];
+                select.appendChild(option);
+            }
+
+            packageOptionsDiv.appendChild(select);
+        }
+
+        // Populate package options initially
+        populatePackageOptions();
+    </script>
+      <script src="BOOK.JS"></script>
+</body>
+</html>

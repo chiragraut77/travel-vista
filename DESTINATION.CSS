@@ -1,0 +1,16 @@
+.name{
+    font-family:Georgia, 'Times New Roman', Times, serif; 
+    padding-top:10PX; font-size:xxx-large;color:white
+   
+}
+.para{
+    font-size: larger;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    text-transform: capitalize;
+
+}
+.book{
+    font-size:xx-large;
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    
+}

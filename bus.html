@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bus Management System</title>
+<style>
+  body {
+    background-color: #f0f0f0;
+    color: #333;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    position: relative;
+    width: 80%;
+    margin: 50px auto;
+    background-color: rgba(255, 255, 255, 0.8); /* Add a semi-transparent background to make the content more readable */
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+form {
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+select, button {
+    width: calc(100% - 22px); /* Adjusted width */
+    padding: 12px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+select {
+    background-color: #f9f9f9;
+    color: #555;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#results {
+    margin-top: 20px;
+}
+
+.bus {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.bus img {
+    display: block;
+    margin: 0 auto 10px;
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    border: 2px solid #007bff;
+    transition: transform 0.3s ease;
+}
+
+.bus img:hover {
+    transform: scale(1.1);
+}
+
+.bus p {
+    margin-bottom: 10px;
+}
+
+.bus button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.bus button:hover {
+    background-color: #0056b3;
+}
+
+/* Video background styles */
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1; /* Ensure the video is behind other content */
+}
+
+#video-bg {
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1; /* Ensure the video is behind other content */
+}
+
+</style>
+</head>
+<body align="center">
+<div class="container">
+    <h1>Bus Management System</h1> <!-- Change heading -->
+    <h2>Search Buses</h2> <!-- Change heading -->
+    <form id="busForm"> <!-- Change form ID -->
+        <label for="source">Select Source Station:</label>
+        <select id="source" onchange="populateDestinations()">
+            <option value="" disabled selected>Select Source Station</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Bangalore">Bangalore</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Pune">Pune</option>
+            <option value="Ahmedabad">Ahmedabad</option>
+        </select>
+
+        <label for="destination">Select Destination Station:</label>
+        <select id="destination" disabled>
+            <option value="" disabled selected>Select Destination Station</option>
+        </select>
+
+        <button type="button" onclick="searchBuses()">Search Buses</button> <!-- Change function name -->
+    </form>
+    <div class="video-background">
+        <video autoplay muted loop id="video-bg">
+            <source src="V6.mp4" type="video/mp4"> <!-- Provide path to your video file -->
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    
+    <div id="results"></div>
+</div>
+
+<script>
+    function populateDestinations() {
+        const sourceStation = document.getElementById('source').value;
+        const destinationSelect = document.getElementById('destination');
+        destinationSelect.innerHTML = '';
+        const destinations = ["Bangalore", "Hyderabad", "Delhi", "Pune", "Ahmedabad"].filter(station => station !== sourceStation);
+        destinations.forEach(destination => {
+            const option = document.createElement('option');
+            option.text = destination;
+            option.value = destination;
+            destinationSelect.appendChild(option);
+        });
+        destinationSelect.disabled = false;
+    }
+
+    function searchBuses() { // Change function name
+        const source = document.getElementById('source').value;
+        const destination = document.getElementById('destination').value;
+        const resultsDiv = document.getElementById('results');
+
+        resultsDiv.innerHTML = ''; // Clear previous results
+
+        if (source && destination) {
+            // Dummy bus data
+            const buses = {
+                "Mumbai-Bangalore": [
+                    {
+                        "company": "Red Bus",
+                        "image": "REDBUS.png",
+                        "url": "https://www.redbus.in/bus-tickets/mumbai-to-bangalore"
+                    },
+                    {
+                        "company": "MakeMyTrip",
+                        "image": "MAKEMYTRIP.png",
+                        "url": "https://www.makemytrip.com/bus-tickets/mumbai-bangalore-bus-ticket-booking.html"
+                    }
+                ],
+                "Mumbai-Hyderabad": [
+                    {
+                        "company": "Red Bus",
+                        "image": "REDBUS.png",
+                        "url": "https://www.redbus.in/bus-tickets/mumbai-to-hyderabad"
+                    },
+                    {
+                        "company": "MakeMyTrip",
+                        "image": "MAKEMYTRIP.png",
+                        "url": "https://www.makemytrip.com/bus-tickets/mumbai-hyderabad-bus-ticket-booking.html"
+                    }
+                ],
+                "Mumbai-Delhi": [
+                    {
+                        "company": "Red Bus",
+                        "image": "REDBUS.png",
+                        "url": "https://www.redbus.in/bus-tickets/mumbai-to-delhi"
+                    },
+                    {
+                        "company": "MakeMyTrip",
+                        "image": "MAKEMYTRIP.png",
+                        "url": "https://www.makemytrip.com/bus-tickets/mumbai-delhi-bus-ticket-booking.html"
+                    }
+                ],
+                "Mumbai-Pune": [
+                    {
+                        "company": "Red Bus",
+                        "image": "REDBUS.png",
+                        "url": "https://www.redbus.in/bus-tickets/mumbai-to-pue"
+                    },
+                    {
+                        "company": "MakeMyTrip",
+                        "image": "MAKEMYTRIP.png",
+                        "url": "https://www.makemytrip.com/bus-tickets/mumbai-pune-bus-ticket-booking.html"
+                    }
+                ],
+                "Mumbai-Ahmedabad": [
+                    {
+                        "company": "Red Bus",
+                        "image": "REDBUS.png",
+                        "url": "https://www.redbus.in/bus-tickets/mumbai-to-ahmedabad"
+                    },
+                    {
+                        "company": "MakeMyTrip",
+                        "image": "MAKEMYTRIP.png",
+                        "url": "https://www.makemytrip.com/bus-tickets/mumbai-ahmedabad-bus-ticket-booking.html"
+                    }
+                ],
+                "Bangalore-Hyderabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/bangalore-to-hyderabad?fromCityName=Bangalore&fromCityId=122&toCityName=Hyderabad&toCityId=124&onward=12-Apr-2024&busType=Any"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/bangalore-hyderabad-bus-ticket-booking.html"
+                    }
+                ],
+                "Bangalore-Delhi": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/bangalore-to-delhi"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/bangalore-delhi-bus-ticket-booking.html"
+                    }
+                ],
+                "Bangalore-Pune": [
+                    {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/bangalore-to-pune"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/bangalore-pune-bus-ticket-booking.html"
+                    }
+                ],
+                "Bangalore-Ahmedabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/bangalore-to-ahmedabad?fromCityName=Bangalore&fromCityId=122&toCityName=Ahmedabad&toCityId=551&onward=12-Apr-2024&busType=Any"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/bangalore-ahmedabad_gujarat-bus-ticket-booking.html"
+                    }
+                ],
+                "Hyderabad-Bangalore": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/hyderabad-to-bangalore"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/hyderabad-bangalore-bus-ticket-booking.html"
+                    }
+                ],
+                "Hyderabad-Delhi": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/hyderabad-to-delhi"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/hyderabad-delhi-bus-ticket-booking.html"
+                    }
+                ],
+                "Hyderabad-Pune": [
+                    {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/hyderabad-to-pune"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/hyderabad-pune-bus-ticket-booking.html"
+                    }
+                ],
+                "Hyderabad-Ahmedabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/hyderabad-to-ahmedabad"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/hyderabad-ahmedabad_gujarat-bus-ticket-booking.html"
+                    }
+                ],
+                "Delhi-Hyderabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/delhi-to-hyderabad"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/delhi-hyderabad-bus-ticket-booking.html"
+                    }
+                ],
+                "Delhi-Bangalore": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/delhi-to-bangalore"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/delhi-bangalorebus-ticket-booking.html"
+                    }
+                ],
+                "Delhi-Pune": [
+                    {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/delhi-to-pune"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/delhi-pune-bus-ticket-booking.html"
+                    }
+                ],
+                "Delhi-Ahmedabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/delhi-to-ahmedabad"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/delhi-ahmedabad_gujarat-bus-ticket-booking.html?gclid=CjwKCAjw8diwBhAbEiwA7i_sJZk7DuMtDXdijc2P0-pAVsz2fHc-5HIk1DbTSxMM3NmxXehlvv6jBBoCFIkQAvD_BwE&cmp=SEM|D|Bus|G|Route|Delhi-Ahmedabad_Route_Non-RLSA|Route_Non-RLSA|ETA|Regular|654628887517&s_kwcid=AL!1631!3!654628887517!p!!g!!delhi%20to%20ahmedabad%20bus&ef_id=CjwKCAjw8diwBhAbEiwA7i_sJZk7DuMtDXdijc2P0-pAVsz2fHc-5HIk1DbTSxMM3NmxXehlvv6jBBoCFIkQAvD_BwE:G:s&gad_source=1"
+                    }
+                ],
+                "Pune-Hyderabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/Pune-to-hyderabad"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus/search/Pune/Hyderabad/12-04-2024?gclid=CjwKCAjw8diwBhAbEiwA7i_sJWVVj5ycIlXNTWYNYf0aqL1t1HO_OM8fId5gU3h1f7O53ewmyACclRoCHrkQAvD_BwE&cmp=SEM|D|Bus|G|Route|Pune-Hyderabad_High_Margin_Route_Non-RLSA|Route_Non-RLSA|ETA|Regular|490500560782&s_kwcid=AL!1631!3!490500560782!e!!g!!pune%20to%20hyderabad%20bus&ef_id=CjwKCAjw8diwBhAbEiwA7i_sJWVVj5ycIlXNTWYNYf0aqL1t1HO_OM8fId5gU3h1f7O53ewmyACclRoCHrkQAvD_BwE:G:s&gad_source=1"
+                    }
+                ],
+                "Pune-Bangalore": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/Pune-to-bangalore"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/pune-bangalore-bus-ticket-booking.html"
+                    }
+                ],
+                "Pune-Delhi": [
+                    {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/Pune-to-delhi"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/pune-delhi-bus-ticket-booking.html"
+                    }
+                ],
+                "Pune-Ahmedabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/Pune-to-ahmedabad"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/Pune-to-Ahmedabad?fromCityName=Pune&fromCityId=130&toCityName=Ahmedabad&toCityId=551&onward=12-Apr-2024&busType=Any&gad_source=1&gclid=CjwKCAjw8diwBhAbEiwA7i_sJYlmtDBhQwDl_BjvFK9qK0S0xGQYt51inO-Ek1ExQIWY-GBBmYAYvRoCzWAQAvD_BwE"
+                    }
+                ],
+                "Ahmedabad-Hyderabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/Ahmedabad-to-hyderabad"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/ahmedabad_gujarat-hyderabad-bus-ticket-booking.html"
+                    }
+                ],
+                "Ahmedabad-Bangalore": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/ahmedabad_gujarat-bangalore-bus-ticket-booking.html"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/Ahmedabad-bangalore-bus-ticket-booking.html"
+                    }
+                ],
+                "Ahmedabad-Delhi": [
+                    {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/Ahmedabad-to-delhi"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/volvo-ac-sleeper-buses-from-ahmedabad_gujarat-to-delhi-online-ticket-booking.html"
+                    }
+                ],
+                "Ahmedabad-Pune": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/bus-tickets/Ahmedabad-to-Pune"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/bus-tickets/ahmedabad_gujarat-pune-bus-ticket-booking.html"
+                    }
+                ],
+                
+                // Define bus data for other routes similarly
+            };
+
+            const busKey = `${source}-${destination}`;
+            const busList = buses[busKey];
+            if (busList) {
+                busList.forEach(bus => {
+                    const busDiv = document.createElement('div');
+                    busDiv.classList.add('bus'); // Change class name
+
+                    const image = document.createElement('img');
+                    image.src = bus.image;
+                    busDiv.appendChild(image);
+
+                    const companyName = document.createElement('p');
+                    companyName.textContent = bus.company;
+                    busDiv.appendChild(companyName);
+
+                    const bookButton = document.createElement('button');
+                    bookButton.textContent = 'Book Now';
+                    bookButton.addEventListener('click', function() {
+                        window.open(bus.url, '_blank');
+                    });
+                    busDiv.appendChild(bookButton);
+
+                    resultsDiv.appendChild(busDiv);
+                });
+            } else {
+                const messagePara = document.createElement('p');
+                messagePara.textContent = 'No buses available for selected route';
+                resultsDiv.appendChild(messagePara);
+            }
+        } else {
+            const messagePara = document.createElement('p');
+            messagePara.textContent = 'Please select both source and destination stations';
+            resultsDiv.appendChild(messagePara);
+        }
+    }
+</script>
+</body>
+</html>

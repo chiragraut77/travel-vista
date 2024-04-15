@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Management System</title>
+<style>
+    body { background-image:url(bg14.webp);
+        background-size: cover;
+        background-repeat: no-repeat;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        color: #fff;
+    }
+
+    .container {
+        width: 80%;
+        margin: 50px auto;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    select, button {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #fff;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+        background-color: #000;
+        color: #fff;
+    }
+
+    button {
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    #results {
+        margin-top: 20px;
+    }
+
+    .flight { 
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .flight img {
+        display: block;
+        margin: 0 auto 10px;
+        height: 150;
+        width: 150;
+    }
+    #bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure video covers entire background */
+    z-index: -1;
+}
+</style>
+</head>
+<body align="center">
+    <video autoplay muted loop id="bg-video">
+        <source src="V2.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+<div class="container">
+    <H1>TRAVEL VISTA</H1>
+    <h2>FLIGHTS BOOKING</h2>
+    <form id="flightForm">
+        <label for="source">Select Source Airport:</label>
+        <select id="source" onchange="populateDestinations()">
+            <option value="" disabled selected>Select Source Airport</option>
+            <optgroup label="Indian Airports">
+                <option value="Delhi">Delhi</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Chennai">Chennai</option>
+                <!-- Add more Indian airports here -->
+            </optgroup>
+            <optgroup label="International Airports">
+                <option value="London">London</option>
+                <option value="Dubai">Dubai</option>
+                <!-- Add more international airports here -->
+            </optgroup>
+        </select>
+
+        <label for="destination">Select Destination Airport:</label>
+        <select id="destination" disabled>
+            <option value="" disabled selected>Select Destination Airport</option>
+            <!-- Options will be populated dynamically using JavaScript -->
+        </select>
+
+        <button type="button" onclick="searchFlights()">Search Flights</button>
+    </form>
+
+    <div id="results"></div>
+</div>
+
+<script>
+    const indianAirports = ["Delhi", "Mumbai", "Chennai"]; 
+    const internationalAirports = ["London", "Dubai"]; 
+
+    // Dummy flight data
+    const flights = {
+        "Delhi-London": [
+            {
+                "airline": "Air India",
+                "image": "airindia.jpg"
+            },
+            {
+                "airline": "ETIHAD AIRWAYS",
+                "image": "etihad.jpg"
+            },
+           
+        ],
+        "Delhi-Dubai": [
+            {
+                "airline": "QUATAR AIRWAYS ",
+                "image": "quatar.jpg"
+            },
+            {
+                "airline": "ETIHAD AIRWAYS",
+                "image": "etihad.jpg"
+            },
+           
+        ],
+        "Mumbai-London": [
+            {
+                "airline": "Air India",
+                "image": "airindia.jpg"
+            },
+            {
+                "airline": "ETIHAD AIRWAYS",
+                "image": "etihad.jpg"
+            },
+           
+        ],
+        "Mumbai-Dubai": [
+            {
+                "airline": "QUATAR AIRWAYS ",
+                "image": "quatar.jpg"
+            },
+            {
+                "airline": "ETIHAD AIRWAYS",
+                "image": "etihad.jpg"
+            },
+           
+        ],
+        "Chennai-London": [
+            {
+                "airline": "Air India",
+                "image": "airindia.jpg"
+            },
+            {
+                "airline": "ETIHAD AIRWAYS",
+                "image": "etihad.jpg"
+            },
+           
+        ],
+        "Chennai-Dubai": [
+            {
+                "airline": "QUATAR AIRWAYS ",
+                "image": "quatar.jpg"
+            },
+            {
+                "airline": "ETIHAD AIRWAYS",
+                "image": "etihad.jpg"
+            },
+           
+        ],
+        // Add more flight data here
+    };
+
+    function populateDestinations() {
+        const sourceAirport = document.getElementById('source').value;
+        const destinationSelect = document.getElementById('destination');
+        destinationSelect.innerHTML = '';
+        const airports = (indianAirports.includes(sourceAirport)) ? indianAirports.concat(internationalAirports) : internationalAirports;
+        airports.forEach(destination => {
+            const option = document.createElement('option');
+            option.text = destination;
+            option.value = destination;
+            destinationSelect.appendChild(option);
+        });
+        destinationSelect.disabled = false;
+    }
+
+    function searchFlights() {
+        const source = document.getElementById('source').value;
+        const destination = document.getElementById('destination').value;
+        const resultsDiv = document.getElementById('results');
+
+        resultsDiv.innerHTML = ''; // Clear previous results
+
+        if (source && destination) {
+            const flightKey = `${source}-${destination}`;
+            const availableFlights = flights[flightKey] || [];
+            if (availableFlights.length > 0) {
+                availableFlights.forEach(flight => {
+                    const flightDiv = document.createElement('div');
+                    flightDiv.classList.add('flight');
+
+                    const image = document.createElement('img');
+                    image.src = flight.image;
+                    flightDiv.appendChild(image);
+
+                    const airlineName = document.createElement('p');
+                    airlineName.textContent = `Airline: ${flight.airline}`;
+                    flightDiv.appendChild(airlineName);
+
+                    const bookButton = document.createElement('button');
+                    bookButton.textContent = 'Book';
+                    bookButton.addEventListener('click', function() {
+                        bookFlight(source, destination, flight.airline);
+                    });
+                    flightDiv.appendChild(bookButton);
+
+                    resultsDiv.appendChild(flightDiv);
+                });
+            } else {
+                const messagePara = document.createElement('p');
+                messagePara.textContent = 'No flights available for selected route';
+                resultsDiv.appendChild(messagePara);
+            }
+        } else {
+            const messagePara = document.createElement('p');
+            messagePara.textContent = 'Please select both source and destination airports';
+            resultsDiv.appendChild(messagePara);
+        }
+    }
+
+    function bookFlight(source, destination, airline) {
+        // Redirect user to the booking website based on the selected route and airline
+        const bookingWebsites = {
+            "Delhi-London": {
+                "Air India": "https://www.airindia.com/in/en/destinations/newlaunch/new-delhi-to-london.html?&utm_source=google&utm_medium=cpc&utm_campaign=Acquisition_Perform_SEM_IF_India_BAU_Prospecting_Generic_Route_Route_DEL-LHR_LongHaul_OB_Desktop_EM&gad_source=1&gclid=Cj0KCQjwq86wBhDiARIsAJhuphmv5hyUQ442BehviB7rJxYi_Bk61BNHHjkCz-uO08Hm2I_-0ccn97UaAtr0EALw_wcB",
+                "ETIHAD AIRWAYS": "https://www.etihad.com/en-in/flights/flights-from-new-delhi-to-london?CID=PPC-INDIA-GOOGLE&&&&&gad_source=1&gclid=Cj0KCQjwq86wBhDiARIsAJhuphk952w6rpr6sxZ1PCe9YM02vw1gPS6oBJXOKcwFmiGgcB3mT443qCIaAi3tEALw_wcB&gclsrc=aw.ds"
+                
+            },
+            "Delhi-Dubai": {
+                "QUATAR AIRWAYS ": "https://www.qatarairways.com/en-in/homepage.html?CID=SXIN95350&account=Google-SEA_SASC-IN-EN-2&campaign=_IN-D-DEL-DXB-EN_phrase&adgroup=Airport+code&term=tickets+to+dxb&&&&&gad_source=1&gclid=Cj0KCQjwq86wBhDiARIsAJhuphkvLQILliiX6m1GdoWAaxfaKXjbYKtaDRPZf82OSfdlDv5zLVxioVIaAklxEALw_wcB&gclsrc=aw.ds",
+                "ETIHAD AIRWAYS": "https://www.etihad.com/en-in/flights/flights-from-new-delhi-to-london?CID=PPC-INDIA-GOOGLE&&&&&gad_source=1&gclid=Cj0KCQjwq86wBhDiARIsAJhuphk952w6rpr6sxZ1PCe9YM02vw1gPS6oBJXOKcwFmiGgcB3mT443qCIaAi3tEALw_wcB&gclsrc=aw.ds"
+                
+            },
+            "Mumbai-London": {
+                "Air India": "https://www.airindia.com/in/en/destinations/newlaunch/mumbai-to-london.html?&utm_source=google&utm_medium=cpc&utm_campaign=Acquisition_Perform_SEM_IF_India_BAU_Prospecting_Generic_Route_Route_BOM-LHR_LongHaul_OB_Desktop_EM&gad_source=1&gclid=Cj0KCQjwq86wBhDiARIsAJhuphnoSjU_dCO8d2wOcp_rFoIh3nMJ6lqKm6erREf4AfZN0nCDuVaaV5AaAhmdEALw_wcB",
+                "ETIHAD AIRWAYS": "https://www.etihad.com/en-in/flights/flights-from-mumbai-to-london?CID=PPC-INDIA-GOOGLE&&&&&gad_source=1&gclid=Cj0KCQjwq86wBhDiARIsAJhuphkiEQstSp4iv8MMZMwROPHeu3uPdmysxC4Aa31kTVhC1ue9VVp1PKoaAqMbEALw_wcB&gclsrc=aw.ds"
+            },
+            "Mumbai-Dubai": {
+                "QUATAR AIRWAYS ": "https://www.qatarairways.com/en-in/homepage.html?CID=SXIN23456993M&account=Google-SEA_SASC-IN-EN-Brand&campaign=IN-Brand-Rest-EN_phrase&adgroup=qatarairways&term=qatarairways&&&&ads_rl=7998576125&gad_source=1&gclid=Cj0KCQjwq86wBhDiARIsAJhuphmOy3-6ji6v8LDfh8rUbWFf5-mX1ES3HyVK44CyzQxYtGKcxxnyuC0aAljeEALw_wcB&gclsrc=aw.ds",
+                "ETIHAD AIRWAYS": "https://www.etihad.com/en-in/flights/flights-from-mumbai-to-dubai?CID=PPC-INDIA-GOOGLE&&&&&gad_source=1&gclid=Cj0KCQjwq86wBhDiARIsAJhuphkaEDN8UbOSBdD1NCLwPNjvgGtGO0KfdvhjUmK4VdgkqeZgfgRG3CMaApidEALw_wcB&gclsrc=aw.ds"
+                
+            },
+            "Chennai-London": {
+                "Air India": "https://www.airindia.com/",
+                "ETIHAD AIRWAYS": "https://www.etihad.com/en-in/flights/flights-from-chennai-to-london"
+            },
+            "Chennai-Dubai": {
+                "QUATAR AIRWAYS ": "https://www.qatarairways.com/en-qa/homepage.html?CID=SXQA23456879M&account=Google-QATAR-QA-EN-Brand&campaign=QA-Brand+Location-EN_exact&adgroup=Brand+EN+TM&term=chennai+to+london+qatar+airways&&&&&gad_source=1&gclid=Cj0KCQjwq86wBhDiARIsAJhuphl_ZKEPnqN-wygmudETG-c5ixWbl09CovdexAnnoJoIo1xpV1lPvS0aAv-HEALw_wcB&gclsrc=aw.ds",
+                "ETIHAD AIRWAYS": "https://www.etihad.com/en-in/flights/flights-from-chennai-to-dubai?CID=PPC-INDIA-GOOGLE&&&&&gad_source=1&gclid=Cj0KCQjwq86wBhDiARIsAJhuphl65q6tUVOIjKj3HQ7LfCF_maT4T8EmtuNX58S18RbwbDrR8J93IA4aAt63EALw_wcB&gclsrc=aw.ds"
+                
+            },
+        };
+        const route = `${source}-${destination}`;
+        const bookingWebsite = bookingWebsites[route][airline];
+        if (bookingWebsite) {
+            window.open(bookingWebsite, '_blank'); // Open the booking website in a new tab
+        } else {
+            alert('No booking website found for the selected route and airline.');
+        }
+    }
+</script>
+</body>
+</html>
