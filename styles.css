@@ -1,0 +1,156 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1; /* Ensure the video is behind other content */
+}
+
+#video-bg {
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1; /* Ensure the video is behind other content */
+}
+
+
+header {
+  background-color: rgb(66, 159, 247); /* Dark blue shade */
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo img {
+  width: 100px;
+  height: 100px;
+}
+
+.title {
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: x-large;
+}
+
+.user-actions button {
+  background-color: white;
+  color: #007bff;
+  border: none;
+  padding: 8px 16px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.quote {
+  text-align: center;
+  margin-top: 20px;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  text-align: center; /* Centering the nav items */
+}
+
+nav ul li {
+  display: inline-block; /* Changing float to inline-block */
+}
+
+nav ul li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 20px;
+  text-decoration: none;
+}
+
+nav ul li a:hover {
+  background-color: #0056b3; /* Darker shade of blue */
+}
+
+.content {
+  padding: 20px;
+  
+}
+
+footer {
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+}
+
+#image-button img {
+  display: block;
+  width: 237px; /* Adjusted width */
+  height: 250px; /* Adjusted height */
+  transition: transform 0.2s ease-in-out; /* Add a smooth transition effect */
+  border: none;
+
+}
+
+#image-button:hover img {
+  transform: translateY(-20px); /* Move the image slightly upwards on hover */
+}
+
+#image-button1 img {
+  display: block;
+  width: 232px; /* Adjusted width */
+  height: 250px; /* Adjusted height */
+  transition: transform 0.2s ease-in-out; /* Add a smooth transition effect */
+}
+
+#image-button1:hover img {
+  transform: translateY(-20px); /* Move the image slightly upwards on hover */
+}
+
+.company-info {
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.info {
+  padding: 10px;
+  background-color: #007bff;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Adjust the height as needed */
+}
+
+.form {
+  background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+  padding: 4%;
+  border-radius: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.img{
+  background-color:rgb(71, 196, 245);
+  color:black;
+  font-size:xx-large; 
+}
+.img1{
+  background-color:rgb(71, 196, 245);
+  color:black;
+  font-size:x-large; 
+}

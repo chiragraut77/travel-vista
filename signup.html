@@ -1,0 +1,33 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <title>SIGN UP</title> 
+    <link rel="stylesheet" href="styles.css"> 
+</head> 
+<body style="background-image: url(bg10.jpg); background-repeat: no-repeat;background-size:cover;"> 
+    <div class="video-background">
+        <video autoplay muted loop id="video-bg">
+            <source src="v8.mp4" type="video/mp4"> <!-- Provide path to your video file -->
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="container"> <!-- Added container div -->
+        <div class="form" align="left" style="padding:4%"> 
+            <form method="POST" action="signup.php" align="center"> <!-- Assuming signup.php as your form handling script -->
+                <u><b><label style="background-color: whitesmoke">SIGN UP</label></b></u>
+                <h3><label style="background-color: whitesmoke">First Name:</label><br>
+                <input type="text" name="firstname" placeholder="First Name"><br></h3> 
+                <h3><label style="background-color: whitesmoke">Last Name:</label><br>
+                <input type="text" name="lastname" placeholder="Last Name"><br></h3> 
+                <h3><label style="background-color: whitesmoke">Contact No:</label><br>
+                <input type="text" name="contactno" placeholder="Contact No"><br></h3> 
+                <h3><label style="background-color: whitesmoke">Email Id:</label><br>
+                <input type="email" name="emailid" placeholder="Email Id"><br></h3> 
+                <h3><label style="background-color: whitesmoke">Password:</label><br>
+                <input type="password" name="password" placeholder="Password"><br></h3> 
+                <input type="submit" value="SIGN UP"><br> 
+            </form>   
+        </div>
+    </div>
+</body>
+</html>

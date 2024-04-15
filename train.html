@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Train Management System</title>
+<style>
+    body {  
+        background-size: cover;
+        background-repeat: repeat;
+        background-color: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        width: 80%;
+        margin: 50px auto;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    select, button {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #fff;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+        background-color: #000;
+        color: #fff;
+    }
+
+    button {
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    #results {
+        margin-top: 20px;
+    }
+
+    .train { 
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .train img {
+        display: block;
+        margin: 0 auto 10px;
+        height: 150px;
+        width: 150px;
+    }
+    #bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure video covers entire background */
+    z-index: -1;
+}
+</style>
+</head>
+<body align="center">
+    <video autoplay muted loop id="bg-video">
+        <source src="V5.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+<div class="container">
+    <h1>Train Booking System</h1>
+    <h2>Search Trains</h2>
+    <form id="trainForm">
+        <label for="source">Select Source Station:</label>
+        <select id="source" onchange="populateDestinations()">
+            <option value="" disabled selected>Select Source Station</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Bangalore">Bangalore</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Pune">Pune</option>
+            <option value="Ahmedabad">Ahmedabad</option>
+        </select>
+
+        <label for="destination">Select Destination Station:</label>
+        <select id="destination" disabled>
+            <option value="" disabled selected>Select Destination Station</option>
+        </select>
+
+        <button type="button" onclick="searchTrains()">Search Trains</button>
+    </form>
+
+    <div id="results"></div>
+</div>
+
+<script>
+    function populateDestinations() {
+        const sourceStation = document.getElementById('source').value;
+        const destinationSelect = document.getElementById('destination');
+        destinationSelect.innerHTML = '';
+        const destinations = ["Bangalore", "Hyderabad", "Delhi", "Pune", "Ahmedabad"].filter(station => station !== sourceStation);
+        destinations.forEach(destination => {
+            const option = document.createElement('option');
+            option.text = destination;
+            option.value = destination;
+            destinationSelect.appendChild(option);
+        });
+        destinationSelect.disabled = false;
+    }
+
+    function searchTrains() {
+        const source = document.getElementById('source').value;
+        const destination = document.getElementById('destination').value;
+        const resultsDiv = document.getElementById('results');
+
+        resultsDiv.innerHTML = ''; // Clear previous results
+
+        if (source && destination) {
+            // Dummy train data
+            const trains = {
+                "Mumbai-Bangalore": [ {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/mumbai-to-bengaluru-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/mumbai-bangalore-train-tickets.html"
+                    }
+                   
+                ],
+                "Mumbai-Hyderabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/mumbai-to-hyderabad-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/mumbai-hyderabad-train-tickets.html"
+                    }
+                ],
+                "Mumbai-Delhi": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/mumbai-to-delhi-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/mumbai-delhi-train-tickets.html"
+                    }
+                ],
+                "Mumbai-Pune": [
+                    {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/mumbai-to-pune-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.redbus.in/train-tickets/mumbai-to-pune-trains"
+                    }
+                ],
+                "Mumbai-Ahmedabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/mumbai-to-ahmedabad-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/mumbai-ahmedabad-train-tickets.html"
+                    }
+                ],
+                "Bangalore-Hyderabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/bengaluru-to-hyderabad-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/bangalore-hyderabad-train-tickets.html"
+                    }
+                ],
+                "Bangalore-Delhi": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/bengaluru-to-delhi-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/bangalore-delhi-train-tickets.html"
+                    }
+                ],
+                "Bangalore-Pune": [
+                    {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/bengaluru-to-pune-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/bangalore-pune-train-tickets.html"
+                    }
+                ],
+                "Bangalore-Ahmedabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/bengaluru-to-ahmedabad-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/bangalore-ahmedabad-train-tickets.html"
+                    }
+                ],
+                "Hyderabad-Bangalore": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/hyderabad-to-bengaluru-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/hyderabad-bangalore-train-tickets.html"
+                    }
+                ],
+                "Hyderabad-Delhi": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/hyderabad-to-delhi-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/hyderabad-delhi-train-tickets.html"
+                    }
+                ],
+                "Hyderabad-Pune": [
+                    {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/hyderabad-to-pune-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/hyderabad-pune-train-tickets.html"
+                    }
+                ],
+                "Hyderabad-Ahmedabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/hyderabad-to-ahmedabad-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/hyderabad-ahmedabad-train-tickets.html"
+                    }
+                ],
+                "Delhi-Hyderabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/delhi-to-hyderabad-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/delhi-hyderabad-train-tickets.html"
+                    }
+                ],
+                "Delhi-Bangalore": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/delhi-to-bengaluru-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/delhi-bangalore-train-tickets.html"
+                    }
+                ],
+                "Delhi-Pune": [
+                    {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/delhi-to-pune-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/delhi-pune-train-tickets.html"
+                    }
+                ],
+                "Delhi-Ahmedabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/delhi-to-ahmedabad-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/delhi-ahmedabad-train-tickets.html"
+                    }
+                ],
+                "Pune-Hyderabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/Pune-to-hyderabad-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/Pune-hyderabad-train-tickets.html"
+                    }
+                ],
+                "Pune-Bangalore": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/Pune-to-bengaluru-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/Pune-bangalore-train-tickets.html"
+                    }
+                ],
+                "Pune-Delhi": [
+                    {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/Pune-to-delhi-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/Pune-delhi-train-tickets.html"
+                    }
+                ],
+                "Pune-Ahmedabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/Pune-to-ahmedabad-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/Pune-ahmedabad-train-tickets.html"
+                    }
+                ],
+                "Ahmedabad-Hyderabad": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/Ahmedabad-to-hyderabad-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/Ahmedabad-hyderabad-train-tickets.html"
+                    }
+                ],
+                "Ahmedabad-Bangalore": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/Ahmedabad-to-bengaluru-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/Ahmedabad-bangalore-train-tickets.html"
+                    }
+                ],
+                "Ahmedabad-Delhi": [
+                    {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/Ahmedabad-to-delhi-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/Ahmedabad-delhi-train-tickets.html"
+                    }
+                ],
+                "Ahmedabad-Pune": [
+                {
+                        "company": "RED BUS ",
+                        "image": "REDBUS.PNG",
+                        "url": "https://www.redbus.in/train-tickets/Ahmedabad-to-Pune-trains"
+                    },
+                    {
+                        "company": "MAKE MY TRIP",
+                        "image": "MAKEMYTRIP.PNG",
+                        "url": "https://www.makemytrip.com/railways/ahmedabad-Pune-train-tickets.html"
+                    }
+                ],
+                
+            };
+
+            const trainKey = `${source}-${destination}`;
+            const trainList = trains[trainKey];
+            if (trainList) {
+                trainList.forEach(train => {
+                    const trainDiv = document.createElement('div');
+                    trainDiv.classList.add('train');
+
+                    const image = document.createElement('img');
+                    image.src = train.image;
+                    trainDiv.appendChild(image);
+
+                    const companyName = document.createElement('p');
+                    companyName.textContent = train.company;
+                    trainDiv.appendChild(companyName);
+
+                    const bookButton = document.createElement('button');
+                    bookButton.textContent = 'Book Now';
+                    bookButton.addEventListener('click', function() {
+                        window.open(train.url, '_blank');
+                    });
+                    trainDiv.appendChild(bookButton);
+
+                    resultsDiv.appendChild(trainDiv);
+                });
+            } else {
+                const messagePara = document.createElement('p');
+                messagePara.textContent = 'No trains available for selected route';
+                resultsDiv.appendChild(messagePara);
+            }
+        } else {
+            const messagePara = document.createElement('p');
+            messagePara.textContent = 'Please select both source and destination stations';
+            resultsDiv.appendChild(messagePara);
+        }
+    }
+</script>
+</body>
+</html>
